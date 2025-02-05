@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículum - Programador</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height:auto;
+            color: #fff;
+        }
+        .container {
+            width: 60%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            top: 10px;
+            text-align: center;
+            background: #2c3e50;
+            color: rgb(204, 197, 197);
+            padding: 60px 20px 20px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+        .header img {
+            position: fixed;
+            top: 65px;
+            left: 15%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid white;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .section {
+            margin-top: 20px;
+            padding: 10px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .section:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 5px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .section:hover h2 {
+            color: #4ca1af;
+            transform: translateX(5px);
+        }
+        .sobre-mi p {
+            color: black;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        .skills span {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition:  0.3s ease, transform 0.2s;
+        }
+        .skills span:hover {
+            background: #4ca1af;
+            transform: translateY(-3px);
+        }
+        ul li {
+            list-style: none;
+            background: #4ca1af;
+            color: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        ul li:hover {
+            transform: translateX(5px);
+        }
+        .contacto p {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(44, 62, 80, 0.8);
+            border-radius: 5px;
+            text-align: center;
+            transition:  0.3s, transform 0.3s;
+        }
+        .contacto p:hover {
+            background: #4ca1af;
+            transform: translateY(-3px);
+        }
+        .experiencia {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition:  0.3s ease;
+        }
+        .experiencia:hover {
+            background: #bdc3c7;
+        }
+        .experiencia h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="imatges/jo.jpg" alt="Foto de perfil"> 
+            <h1>Xavier Bieto Puch </h1>
+            <p>Desarrollador de Aplicaciones Multiplataforma</p>
+        </div>
+        <div class="section sobre-mi">
+            <h2>Sobre mí</h2>
+            <p>Soy un programador apasionado que a lo largo de mi aprendizaje he trabajado con diversos lenguajes de programación como Java, Kotlin VBasic. Por el momento solo tengo conocimientos de backend, pero siempre estoy en busca de nuevos retos en diferentes áreas, tanto en backend como en frontend.</p>
+            <p>Mi enfoque es crear software que no solo sea eficiente y funcional, sino también intuitivo y fácil de usar. Me encanta aprender nuevas tecnologías, mejorar mis habilidades constantemente y colaborar con otros profesionales del sector para resolver problemas complejos.</p>
+            <p>Mi objetivo comos programador es seguir desarrollando mis habilidades en nuevas tecnologías emergentes, especialmente en el área de inteligencia artificial y el desarrollo de aplicaciones para la nube, para aportar soluciones innovadoras que puedan mejorar la vida de los usuarios.</p>
+            
+             </div>
+        <div class="section">
+            <h2>Habilidades Técnicas</h2>
+            <div class="skills">
+                <span>Java</span>
+                <span>Kotlin</span>
+                
+                <span>VBasic</span>
+                <span>SQL</span>
+                <span>Odoo</span>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Idiomas</h2>
+            <ul>
+                <li>Catalán - Nativo</li>
+                <li>Castellano - Nativo</li>
+                <li>Inglés - Medio-Alto</li>
+            </ul>
+        </div>
+        <!-- Sección de Experiencia Laboral -->
+        <div class="section experiencia">
+            <h2>Experiencia Laboral</h2>
+            <div>
+                <h3>Desarrollador Backend - RGB</h3>
+                <p><strong>Fecha:</strong> 04/11/2024 - Actualidad</p>
+                <p><strong>Descripción:</strong> Prácticas de ciclo realizadas en la empresa RGB programando en Odoo con Python y utilizando módulos de este. </p>
+            </div>
+           
+        </div>
+        <div class="section contacto">
+            <h2>Contacto</h2>
+            <p>Email: xavibieto05@gmail.com</p>
+            <p>Teléfono: +34 693 764 273</p>
+        </div>
+    </div>
+</body>
+</html>
