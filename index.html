@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Administrador de Tareas</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Carga de la lógica -->
   <script type="module" src="script.js" defer></script>
 </head>
 <body>
@@ -16,30 +17,45 @@
     <button onclick="window.print()">Imprimir</button>
   </div>
 
-  <!-- Sección añadir -->
+  <!-- ========================= -->
+  <!-- Sección Añadir Tarea -->
+  <!-- ========================= -->
   <div id="add" class="seccion" style="display:none;">
     <h2>Añadir Tarea</h2>
-    <label>Fecha: <input type="date" id="fecha"></label>
+
+    <label>Fecha: 
+      <input type="date" id="fecha">
+    </label>
     <br><br>
 
     <label>Categoría:
-      <select id="categoria" onchange="actualizarTrabajos()">
-        <option value="">-- Selecciona --</option>
-        <option value="electricidad">Electricidad</option>
-        <option value="fontaneria">Fontanería</option>
-      </select>
+      <select id="categoria"></select>
     </label>
+    <button onclick="mostrarFormCategoria()">+ Añadir categoría</button>
     <br><br>
 
     <label>Trabajo:
       <select id="trabajo"></select>
     </label>
+    <button onclick="mostrarFormTrabajo()">+ Añadir trabajo</button>
     <br><br>
 
-    <button onclick="agregarTarea()">Agregar</button>
+    <button onclick="agregarTarea()">Guardar tarea</button>
+
+    <!-- Formulario oculto para nueva categoría -->
+    <div id="form-categoria" style="display:none; margin-top:10px;">
+      <input type="text" id="nueva-categoria" placeholder="Nombre categoría">
+      <button onclick="guardarCategoria()">Guardar categoría</button>
+    </div>
+
+    <!-- Formulario oculto para nuevo trabajo -->
+    <div id="form-trabajo" style="display:none; margin-top:10px;">
+      <input type="text" id="nuevo-trabajo" placeholder="Nombre trabajo">
+      <button onclick="guardarTrabajo()">Guardar trabajo</button>
+    </div>
 
     <!-- Tabla de tareas -->
-    <div>
+    <div style="margin-top:20px;">
       <h2>Tareas añadidas</h2>
       <table border="1" id="tabla">
         <thead>
@@ -55,7 +71,9 @@
     </div>
   </div>
 
-  <!-- Sección buscar -->
+  <!-- ========================= -->
+  <!-- Sección Buscar -->
+  <!-- ========================= -->
   <div id="search" class="seccion" style="display:none;">
     <h2>Buscar tareas</h2>
     <p>(Aquí pondremos filtros de búsqueda más adelante)</p>

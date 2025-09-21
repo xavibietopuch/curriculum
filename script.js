@@ -5,7 +5,7 @@ import {
   setDoc, updateDoc, arrayUnion 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// Configuración Firebase
+// Configuración Firebase (ya con tus datos reales)
 const firebaseConfig = {
   apiKey: "AIzaSyC7tNYGFF9GCNpnyGslKoWR6tFsW_6PFLE",
   authDomain: "bdtareasjosep.firebaseapp.com",
@@ -28,7 +28,50 @@ function mostrarSeccion(id) {
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// 🔹 Cargar categorías desde Firebase
+// 🔹 Mostrar formulario de nueva categoría
+function mostrarFormCategoria() {
+  document.getElementById("form-categoria").style.display = "block";
+}
+window.mostrarFormCategoria = mostrarFormCategoria;
+
+// 🔹 Guardar nueva categoría en Firebase
+async function guardarCategoria() {
+  const nombre = document.getElementById("nueva-categoria").value.trim();
+  if (!nombre) {
+    alert("Introduce un nombre de categoría");
+    return;
+  }
+  await setDoc(doc(db, "categorias", nombre), { trabajos: [] });
+  document.getElementById("form-categoria").style.display = "none";
+  document.getElementById("nueva-categoria").value = "";
+  cargarCategorias();
+}
+window.guardarCategoria = guardarCategoria;
+
+// 🔹 Mostrar formulario de nuevo trabajo
+function mostrarFormTrabajo() {
+  document.getElementById("form-trabajo").style.display = "block";
+}
+window.mostrarFormTrabajo = mostrarFormTrabajo;
+
+// 🔹 Guardar nuevo trabajo en la categoría actual
+async function guardarTrabajo() {
+  const trabajo = document.getElementById("nuevo-trabajo").value.trim();
+  const categoria = selectCategoria.value;
+  if (!trabajo || !categoria) {
+    alert("Selecciona una categoría y escribe un trabajo");
+    return;
+  }
+  await updateDoc(doc(db, "categorias", categoria), {
+    trabajos: arrayUnion(trabajo)
+  });
+  document.getElementById("form-trabajo").style.display = "none";
+  document.getElementById("nuevo-trabajo").value = "";
+  cargarTrabajos(categoria);
+}
+window.guardarTrabajo = guardarTrabajo;
+
+// 🔹 Cargar categorías
 async function cargarCategorias() {
   selectCategoria.innerHTML = "";
   const snap = await getDocs(collection(db, "categorias"));
@@ -38,30 +81,10 @@ async function cargarCategorias() {
     option.textContent = docSnap.id;
     selectCategoria.appendChild(option);
   });
-  // opción especial para añadir nueva
-  const extra = document.createElement("option");
-  extra.value = "__nueva__";
-  extra.textContent = "+ Añadir categoría";
-  selectCategoria.appendChild(extra);
 }
 window.cargarCategorias = cargarCategorias;
 
-// 🔹 Al cambiar de categoría
-selectCategoria.addEventListener("change", async () => {
-  if (selectCategoria.value === "__nueva__") {
-    const nueva = prompt("Introduce el nombre de la nueva categoría:");
-    if (nueva) {
-      await setDoc(doc(db, "categorias", nueva), { trabajos: [] });
-      await cargarCategorias();
-      selectCategoria.value = nueva;
-      cargarTrabajos(nueva);
-    }
-  } else {
-    cargarTrabajos(selectCategoria.value);
-  }
-});
-
-// 🔹 Cargar trabajos según categoría
+// 🔹 Cargar trabajos
 async function cargarTrabajos(cat) {
   selectTrabajo.innerHTML = "";
   const snap = await getDocs(collection(db, "categorias"));
@@ -76,34 +99,16 @@ async function cargarTrabajos(cat) {
       });
     }
   });
-  // opción para añadir trabajo nuevo
-  const extra = document.createElement("option");
-  extra.value = "__nuevo__";
-  extra.textContent = "+ Añadir trabajo";
-  selectTrabajo.appendChild(extra);
 }
 window.cargarTrabajos = cargarTrabajos;
-
-// 🔹 Al cambiar de trabajo
-selectTrabajo.addEventListener("change", async () => {
-  if (selectTrabajo.value === "__nuevo__") {
-    const nuevo = prompt("Introduce el nuevo trabajo:");
-    if (nuevo) {
-      await updateDoc(doc(db, "categorias", selectCategoria.value), {
-        trabajos: arrayUnion(nuevo)
-      });
-      cargarTrabajos(selectCategoria.value);
-    }
-  }
-});
 
 // 🔹 Agregar tarea a Firebase
 async function agregarTarea() {
   const fecha = document.getElementById("fecha").value;
-  const categoria = document.getElementById("categoria").value;
-  const trabajo = document.getElementById("trabajo").value;
+  const categoria = selectCategoria.value;
+  const trabajo = selectTrabajo.value;
 
-  if (!fecha || !categoria || !trabajo || categoria === "__nueva__" || trabajo === "__nuevo__") {
+  if (!fecha || !categoria || !trabajo) {
     alert("Completa todos los campos");
     return;
   }
@@ -139,7 +144,7 @@ async function eliminarTarea(id) {
 }
 window.eliminarTarea = eliminarTarea;
 
-// Inicialización al cargar
+// Inicialización
 cargarCategorias();
 mostrarTareas();
 mostrarSeccion('');
