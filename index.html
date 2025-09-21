@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Administrador de Tareas</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase -->
+  <script type="module" src="script.js" defer></script>
+</head>
+<body>
+  <h1>Administrador de Tareas</h1>
+
+  <!-- Menú principal -->
+  <div id="menu">
+    <button onclick="mostrarSeccion('add')">Añadir</button>
+    <button onclick="mostrarSeccion('search')">Buscar</button>
+    <button onclick="window.print()">Imprimir</button>
+  </div>
+
+  <!-- Sección añadir (oculta al inicio) -->
+  <div id="add" class="seccion" style="display:none;">
+    <h2>Añadir Tarea</h2>
+    <label>Fecha: <input type="date" id="fecha"></label>
+    <br><br>
+
+    <label>Categoría:
+      <select id="categoria" onchange="actualizarTrabajos()">
+        <option value="">-- Selecciona --</option>
+        <option value="electricidad">Electricidad</option>
+        <option value="fontaneria">Fontanería</option>
+      </select>
+    </label>
+    <br><br>
+
+    <label>Trabajo:
+      <select id="trabajo"></select>
+    </label>
+    <br><br>
+
+    <button onclick="agregarTarea()">Agregar</button>
+
+    <!-- Tabla de tareas -->
+    <div>
+      <h2>Tareas añadidas</h2>
+      <table border="1" id="tabla">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Trabajo</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sección buscar (vacía de momento, oculta) -->
+  <div id="search" class="seccion" style="display:none;">
+    <h2>Buscar tareas</h2>
+    <p>(Aquí pondremos filtros de búsqueda más adelante)</p>
+  </div>
+</body>
+</html>
