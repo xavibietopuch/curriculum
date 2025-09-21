@@ -1,7 +1,9 @@
 // Import Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } 
-  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { 
+  getFirestore, collection, addDoc, getDocs, deleteDoc, doc, 
+  setDoc, updateDoc, arrayUnion 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // Configuración Firebase
 const firebaseConfig = {
@@ -16,41 +18,92 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Mapa de trabajos según categoría
-const trabajosPorCategoria = {
-  electricidad: ["1", "2"],
-  fontaneria: ["5", "6"]
-};
+const selectCategoria = document.getElementById("categoria");
+const selectTrabajo = document.getElementById("trabajo");
 
-// Mostrar secciones
+// 🔹 Mostrar secciones
 function mostrarSeccion(id) {
   document.querySelectorAll('.seccion').forEach(sec => sec.style.display = 'none');
   if (id) document.getElementById(id).style.display = 'block';
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// Actualizar trabajos según categoría
-function actualizarTrabajos() {
-  const cat = document.getElementById("categoria").value;
-  const trabajos = trabajosPorCategoria[cat] || [];
-  const select = document.getElementById("trabajo");
-  select.innerHTML = "";
-  trabajos.forEach(t => {
-    const opt = document.createElement("option");
-    opt.value = t;
-    opt.textContent = t;
-    select.appendChild(opt);
+// 🔹 Cargar categorías desde Firebase
+async function cargarCategorias() {
+  selectCategoria.innerHTML = "";
+  const snap = await getDocs(collection(db, "categorias"));
+  snap.forEach(docSnap => {
+    const option = document.createElement("option");
+    option.value = docSnap.id;
+    option.textContent = docSnap.id;
+    selectCategoria.appendChild(option);
   });
+  // opción especial para añadir nueva
+  const extra = document.createElement("option");
+  extra.value = "__nueva__";
+  extra.textContent = "+ Añadir categoría";
+  selectCategoria.appendChild(extra);
 }
-window.actualizarTrabajos = actualizarTrabajos;
+window.cargarCategorias = cargarCategorias;
 
-// Agregar tarea a Firebase
+// 🔹 Al cambiar de categoría
+selectCategoria.addEventListener("change", async () => {
+  if (selectCategoria.value === "__nueva__") {
+    const nueva = prompt("Introduce el nombre de la nueva categoría:");
+    if (nueva) {
+      await setDoc(doc(db, "categorias", nueva), { trabajos: [] });
+      await cargarCategorias();
+      selectCategoria.value = nueva;
+      cargarTrabajos(nueva);
+    }
+  } else {
+    cargarTrabajos(selectCategoria.value);
+  }
+});
+
+// 🔹 Cargar trabajos según categoría
+async function cargarTrabajos(cat) {
+  selectTrabajo.innerHTML = "";
+  const snap = await getDocs(collection(db, "categorias"));
+  snap.forEach(d => {
+    if (d.id === cat) {
+      const datos = d.data().trabajos || [];
+      datos.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        selectTrabajo.appendChild(opt);
+      });
+    }
+  });
+  // opción para añadir trabajo nuevo
+  const extra = document.createElement("option");
+  extra.value = "__nuevo__";
+  extra.textContent = "+ Añadir trabajo";
+  selectTrabajo.appendChild(extra);
+}
+window.cargarTrabajos = cargarTrabajos;
+
+// 🔹 Al cambiar de trabajo
+selectTrabajo.addEventListener("change", async () => {
+  if (selectTrabajo.value === "__nuevo__") {
+    const nuevo = prompt("Introduce el nuevo trabajo:");
+    if (nuevo) {
+      await updateDoc(doc(db, "categorias", selectCategoria.value), {
+        trabajos: arrayUnion(nuevo)
+      });
+      cargarTrabajos(selectCategoria.value);
+    }
+  }
+});
+
+// 🔹 Agregar tarea a Firebase
 async function agregarTarea() {
   const fecha = document.getElementById("fecha").value;
   const categoria = document.getElementById("categoria").value;
   const trabajo = document.getElementById("trabajo").value;
 
-  if (!fecha || !categoria || !trabajo) {
+  if (!fecha || !categoria || !trabajo || categoria === "__nueva__" || trabajo === "__nuevo__") {
     alert("Completa todos los campos");
     return;
   }
@@ -60,7 +113,7 @@ async function agregarTarea() {
 }
 window.agregarTarea = agregarTarea;
 
-// Mostrar tareas en tabla
+// 🔹 Mostrar tareas en tabla
 async function mostrarTareas() {
   const tbody = document.getElementById("tabla-body");
   tbody.innerHTML = "";
@@ -79,12 +132,14 @@ async function mostrarTareas() {
 }
 window.mostrarTareas = mostrarTareas;
 
-// Eliminar tarea
+// 🔹 Eliminar tarea
 async function eliminarTarea(id) {
   await deleteDoc(doc(db, "tareas", id));
   mostrarTareas();
 }
 window.eliminarTarea = eliminarTarea;
 
-// Ocultar secciones al inicio
+// Inicialización al cargar
+cargarCategorias();
+mostrarTareas();
 mostrarSeccion('');
