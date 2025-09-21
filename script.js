@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebas
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } 
   from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// ⚠️ Sustituye con tu configuración de Firebase
+// Configuración Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyC7tNYGFF9GCNpnyGslKoWR6tFsW_6PFLE",
   authDomain: "bdtareasjosep.firebaseapp.com",
@@ -16,16 +16,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Mapa de trabajos por categoría
+// Mapa de trabajos según categoría
 const trabajosPorCategoria = {
-  electricidad: ["Conectar cables", "Desconectar cables"],
-  fontaneria: ["Cortar tubo", "Pegar tubo"]
+  electricidad: ["1", "2"],
+  fontaneria: ["5", "6"]
 };
 
 // Mostrar secciones
 function mostrarSeccion(id) {
   document.querySelectorAll('.seccion').forEach(sec => sec.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
+  if (id) document.getElementById(id).style.display = 'block';
 }
 window.mostrarSeccion = mostrarSeccion;
 
@@ -86,5 +86,5 @@ async function eliminarTarea(id) {
 }
 window.eliminarTarea = eliminarTarea;
 
-// Al cargar la página
-mostrarSeccion(''); // oculta todo al inicio
+// Ocultar secciones al inicio
+mostrarSeccion('');
