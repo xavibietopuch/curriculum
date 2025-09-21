@@ -5,12 +5,12 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
 
 // ⚠️ Sustituye con tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "TU_APIKEY",
-  authDomain: "TU_DOMINIO.firebaseapp.com",
-  projectId: "TU_PROJECTID",
-  storageBucket: "TU_BUCKET.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+  apiKey: "AIzaSyC7tNYGFF9GCNpnyGslKoWR6tFsW_6PFLE",
+  authDomain: "bdtareasjosep.firebaseapp.com",
+  projectId: "bdtareasjosep",
+  storageBucket: "bdtareasjosep.firebasestorage.app",
+  messagingSenderId: "791774072477",
+  appId: "1:791774072477:web:d8aa3775bf9aee6439ce74"
 };
 
 const app = initializeApp(firebaseConfig);
