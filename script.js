@@ -11,7 +11,7 @@ const selectTrabajo = document.getElementById("trabajo");
 const filtroCategoria = document.getElementById("filtro-categoria");
 const filtroTrabajo = document.getElementById("filtro-trabajo");
 
-// 📌 Array temporal de tareas locales
+// 📌 Array local con tareas temporales
 let tareasLocales = [];
 
 // 🔹 Mostrar secciones
@@ -21,7 +21,7 @@ function mostrarSeccion(id) {
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// 🔹 Formularios
+// 🔹 Formularios de nueva categoría / trabajo
 function mostrarFormCategoria() {
   document.getElementById("form-categoria").style.display = "block";
 }
@@ -118,7 +118,7 @@ async function cargarTrabajos(categoriaId, isFilter = false) {
 }
 window.cargarTrabajos = cargarTrabajos;
 
-// 🔹 Agregar tarea a tabla local (NO BD)
+// 🔹 Añadir tarea a tabla local
 function agregarTarea() {
   const fecha = document.getElementById("fecha").value;
   const categoriaId = selectCategoria.value;
@@ -157,9 +157,9 @@ function eliminarTareaLocal(i) {
 }
 window.eliminarTareaLocal = eliminarTareaLocal;
 
-// 🔹 Enviar todas las tareas locales a Supabase
-async function enviarTareas() {
-  if (tareasLocales.length === 0) return alert("No hay tareas para enviar");
+// 🔹 Guardar todas las tareas locales en BD
+async function guardarTodo() {
+  if (tareasLocales.length === 0) return alert("No hay tareas para guardar");
 
   const insertData = tareasLocales.map(t => ({
     fecha: t.fecha,
@@ -168,19 +168,15 @@ async function enviarTareas() {
   }));
 
   const { error } = await supabase.from("tareas").insert(insertData);
-  if (error) return alert("Error enviando tareas: " + error.message);
+  if (error) return alert("Error guardando en BD: " + error.message);
 
-  alert("Tareas enviadas correctamente ✅");
+  alert("Tareas guardadas correctamente ✅");
   tareasLocales = [];
   renderTareasLocales();
-
-  // opcional: mostrar sección Buscar
-  mostrarSeccion("search");
-  buscarTareas();
 }
-window.enviarTareas = enviarTareas;
+window.guardarTodo = guardarTodo;
 
-// 🔹 Buscar tareas
+// 🔹 Buscar tareas (para la pestaña Buscar)
 async function buscarTareas() {
   const fecha = document.getElementById("filtro-fecha")?.value;
   const categoriaId = filtroCategoria.value;
@@ -225,7 +221,7 @@ async function mostrarTareas() {
 }
 window.mostrarTareas = mostrarTareas;
 
-// 🔹 Renderizar tabla BD (pestaña Buscar)
+// 🔹 Renderizar tabla de BD (pestaña Buscar)
 function renderTareasBD(data) {
   const tbody = document.getElementById("tabla-body");
   tbody.innerHTML = "";
@@ -242,7 +238,7 @@ function renderTareasBD(data) {
   });
 }
 
-// 🔹 Eliminar tarea en BD
+// 🔹 Eliminar tarea de BD
 async function eliminarTarea(id) {
   const { error } = await supabase.from("tareas").delete().eq("id", id);
   if (error) return alert("Error eliminando tarea: " + error.message);

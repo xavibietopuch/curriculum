@@ -39,7 +39,8 @@
     <button onclick="mostrarFormTrabajo()">+ Añadir trabajo</button>
     <br><br>
 
-    <button onclick="agregarTarea()">Guardar tarea</button>
+    <!-- Botón para añadir a la tabla local -->
+    <button onclick="agregarTarea()">Añadir a la lista</button>
 
     <!-- Formulario nueva categoría -->
     <div id="form-categoria" style="display:none; margin-top:10px;">
@@ -51,6 +52,23 @@
     <div id="form-trabajo" style="display:none; margin-top:10px;">
       <input type="text" id="nuevo-trabajo" placeholder="Nombre trabajo">
       <button onclick="guardarTrabajo()">Guardar trabajo</button>
+    </div>
+
+    <!-- Tabla de tareas locales -->
+    <div style="margin-top:20px;">
+      <h2>Tareas pendientes (local)</h2>
+      <table border="1" id="tabla-local">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Trabajo</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body-local"></tbody>
+      </table>
+      <button onclick="guardarTodo()">Guardar todo en BD</button>
     </div>
   </div>
 
@@ -68,8 +86,6 @@
       </label>
       <label>
         Categoría:
-      <label>
-        Categoría:
         <select id="filtro-categoria"></select>
       </label>
       <label>
@@ -80,8 +96,8 @@
       <button onclick="resetFiltros()">Reset</button>
     </div>
 
-    <!-- Tabla de resultados -->
-    <table border="1" id="tabla">
+    <!-- Tabla de resultados BD -->
+    <table border="1" id="tabla-bd">
       <thead>
         <tr>
           <th>Fecha</th>
@@ -90,25 +106,8 @@
           <th>Acción</th>
         </tr>
       </thead>
-      <tbody id="tabla-body"></tbody>
+      <tbody id="tabla-body-bd"></tbody>
     </table>
   </div>
-  <!-- Tabla de tareas locales -->
-<div style="margin-top:20px;">
-  <h2>Tareas añadidas</h2>
-  <table border="1" id="tabla">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Categoría</th>
-        <th>Trabajo</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody id="tabla-body"></tbody>
-  </table>
-  <button onclick="enviarTareas()">Enviar todo a la base de datos</button>
-</div>
-
 </body>
 </html>
