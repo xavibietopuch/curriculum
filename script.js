@@ -1,4 +1,3 @@
-// Configuración Supabase
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabaseUrl = "https://ltlbdhwsihmsnjjjwxmi.supabase.co";
@@ -16,13 +15,13 @@ function mostrarSeccion(id) {
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// 🔹 Mostrar formulario de nueva categoría
+// 🔹 Mostrar formulario nueva categoría
 function mostrarFormCategoria() {
   document.getElementById("form-categoria").style.display = "block";
 }
 window.mostrarFormCategoria = mostrarFormCategoria;
 
-// 🔹 Guardar nueva categoría
+// 🔹 Guardar categoría
 async function guardarCategoria() {
   const nombre = document.getElementById("nueva-categoria").value.trim();
   if (!nombre) {
@@ -40,13 +39,13 @@ async function guardarCategoria() {
 }
 window.guardarCategoria = guardarCategoria;
 
-// 🔹 Mostrar formulario de nuevo trabajo
+// 🔹 Mostrar formulario nuevo trabajo
 function mostrarFormTrabajo() {
   document.getElementById("form-trabajo").style.display = "block";
 }
 window.mostrarFormTrabajo = mostrarFormTrabajo;
 
-// 🔹 Guardar nuevo trabajo
+// 🔹 Guardar trabajo
 async function guardarTrabajo() {
   const nombre = document.getElementById("nuevo-trabajo").value.trim();
   const categoriaId = selectCategoria.value;
@@ -80,20 +79,18 @@ async function cargarCategorias() {
 
   data.forEach(cat => {
     const option = document.createElement("option");
-    option.value = cat.id; // usamos el ID UUID
+    option.value = cat.id;
     option.textContent = cat.nombre;
     selectCategoria.appendChild(option);
   });
 
-  // 👇 Listener para cuando cambie la categoría
+  // Cuando cambie la categoría, refrescar trabajos
   selectCategoria.addEventListener("change", () => {
     const categoriaId = selectCategoria.value;
     if (categoriaId) {
       cargarTrabajos(categoriaId);
-      mostrarTareas(categoriaId);
     } else {
       selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
-      mostrarTareas(); // muestra todas las tareas
     }
   });
 }
@@ -140,11 +137,22 @@ async function agregarTarea() {
     alert("Error guardando tarea: " + error.message);
     return;
   }
-  mostrarTareas(categoriaId); // 👈 refrescamos la tabla filtrada
+  mostrarTareas(categoriaId); // refrescamos filtrado
 }
 window.agregarTarea = agregarTarea;
 
-// 🔹 Mostrar tareas (filtradas opcionalmente por categoría)
+// 🔹 Buscar tareas (al pulsar botón)
+function buscarTareas() {
+  const categoriaId = selectCategoria.value;
+  if (categoriaId) {
+    mostrarTareas(categoriaId);
+  } else {
+    mostrarTareas(); // todas
+  }
+}
+window.buscarTareas = buscarTareas;
+
+// 🔹 Mostrar tareas
 async function mostrarTareas(categoriaId = null) {
   const tbody = document.getElementById("tabla-body");
   tbody.innerHTML = "";
@@ -195,5 +203,5 @@ window.eliminarTarea = eliminarTarea;
 
 // Inicialización
 cargarCategorias();
-mostrarTareas(); // muestra todas al inicio
+mostrarTareas(); // todas al inicio
 mostrarSeccion("");
