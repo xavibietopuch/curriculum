@@ -85,36 +85,37 @@ table th {
 /* 📱 Ajustes responsive para móviles (vertical) */
 /* 📱 Ajustes responsive para móviles (vertical, todo MUY grande) */
 /* 📱 Ajustes responsive para móviles */
+/* 📱 Ajustes responsive para móviles */
 @media screen and (max-width: 600px) {
   body {
-    margin: 20px;
-    font-size: 40px;
+    margin: 15px;
+    font-size: 18px; /* texto base legible */
   }
 
   h1 {
-    font-size: 70px;
+    font-size: 28px;
   }
 
   h2 {
-    font-size: 60px;
+    font-size: 24px;
   }
 
   #menu button {
     width: 100%;
-    margin: 20px 0;
-    padding: 40px;
-    font-size: 60px;
+    margin: 10px 0;
+    padding: 14px;
+    font-size: 20px;
   }
 
   label {
-    font-size: 55px;
+    font-size: 18px;
   }
 
   select, input, button {
     width: 100%;
     max-width: none;
-    font-size: 55px;
-    padding: 30px;
+    font-size: 18px;
+    padding: 12px;
   }
 
   /* ✅ Tablas en grid de 2 columnas */
@@ -122,16 +123,16 @@ table th {
     width: 100%;
     border-collapse: collapse;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* dos columnas iguales */
-    gap: 15px;
+    grid-template-columns: 1fr 1fr; /* dos columnas */
+    gap: 10px;
   }
 
   thead {
-    display: none; /* ocultamos cabecera en móvil */
+    display: none;
   }
 
   tbody {
-    display: contents; /* los <tr> se convierten en celdas del grid */
+    display: contents;
   }
 
   tr {
@@ -139,10 +140,10 @@ table th {
   }
 
   td {
-    border: 2px solid #ccc;
-    border-radius: 12px;
-    padding: 20px;
-    font-size: 55px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
     background: #fff;
     text-align: center;
   }
@@ -150,12 +151,13 @@ table th {
   td[data-label]::before {
     display: block;
     font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 55px;
+    margin-bottom: 5px;
+    font-size: 16px;
     content: attr(data-label);
     text-align: center;
   }
 }
+
 
 
 
