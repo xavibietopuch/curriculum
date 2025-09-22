@@ -84,47 +84,46 @@ table th {
 
 /* 📱 Ajustes responsive para móviles (vertical) */
 /* 📱 Ajustes responsive para móviles (vertical, todo MUY grande) */
-/* 📱 Ajustes responsive para móviles */
-/* 📱 Ajustes responsive para móviles */
+/* 📱 Ajustes responsive para móviles (vertical) */
 @media screen and (max-width: 600px) {
   body {
-    margin: 15px;
-    font-size: 18px; /* texto base legible */
+    margin: 8px;
+    font-size: 12px; /* texto general pequeño */
   }
 
   h1 {
-    font-size: 28px;
+    font-size: 16px;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 14px;
   }
 
   #menu button {
     width: 100%;
-    margin: 10px 0;
-    padding: 14px;
-    font-size: 20px;
+    margin: 6px 0;
+    padding: 6px;
+    font-size: 12px;
   }
 
   label {
-    font-size: 18px;
+    font-size: 12px;
   }
 
   select, input, button {
     width: 100%;
     max-width: none;
-    font-size: 18px;
-    padding: 12px;
+    font-size: 12px;
+    padding: 6px;
   }
 
-  /* ✅ Tablas en grid de 2 columnas */
+  /* ✅ Tabla en grid de 2 columnas compacta */
   table {
     width: 100%;
     border-collapse: collapse;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* dos columnas */
-    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
   }
 
   thead {
@@ -141,9 +140,9 @@ table th {
 
   td {
     border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 10px;
     background: #fff;
     text-align: center;
   }
@@ -151,13 +150,11 @@ table th {
   td[data-label]::before {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 16px;
+    margin-bottom: 2px;
+    font-size: 10px;
     content: attr(data-label);
     text-align: center;
   }
 }
-
-
 
 
