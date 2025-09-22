@@ -13,7 +13,7 @@
   <div id="menu">
     <button onclick="mostrarSeccion('add')">Añadir</button>
     <button onclick="mostrarSeccion('search')">Buscar</button>
-    <button onclick="window.print()">Imprimir</button>
+    <button onclick="window.print()">Imprimir todo</button>
   </div>
 
   <!-- ========================= -->
@@ -45,22 +45,24 @@
     <button onclick="mostrarFormCliente()">+ Añadir cliente</button>
     <br><br>
 
+    <label>Observaciones:</label><br>
+    <textarea id="observaciones" rows="3" cols="40" placeholder="Escribe observaciones aquí..."></textarea>
+    <br><br>
+
     <!-- Botón para añadir a la tabla local -->
     <button onclick="agregarTarea()">Añadir a la lista</button>
 
-    <!-- Formulario nueva categoría -->
+    <!-- Formularios dinámicos -->
     <div id="form-categoria" style="display:none; margin-top:10px;">
       <input type="text" id="nueva-categoria" placeholder="Nombre categoría">
       <button onclick="guardarCategoria()">Guardar categoría</button>
     </div>
 
-    <!-- Formulario nuevo trabajo -->
     <div id="form-trabajo" style="display:none; margin-top:10px;">
       <input type="text" id="nuevo-trabajo" placeholder="Nombre trabajo">
       <button onclick="guardarTrabajo()">Guardar trabajo</button>
     </div>
 
-    <!-- Formulario nuevo cliente -->
     <div id="form-cliente" style="display:none; margin-top:10px;">
       <input type="text" id="nuevo-cliente" placeholder="Nombre cliente">
       <button onclick="guardarCliente()">Guardar cliente</button>
@@ -76,6 +78,7 @@
             <th>Categoría</th>
             <th>Trabajo</th>
             <th>Cliente</th>
+            <th>Observaciones</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -117,15 +120,19 @@
     <table border="1" id="tabla-bd">
       <thead>
         <tr>
+          <th>✔</th>
           <th>Fecha</th>
           <th>Categoría</th>
           <th>Trabajo</th>
           <th>Cliente</th>
+          <th>Observaciones</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody id="tabla-body-bd"></tbody>
     </table>
+    <br>
+    <button onclick="imprimirSeleccionados()">Imprimir seleccionados</button>
   </div>
 </body>
 </html>
