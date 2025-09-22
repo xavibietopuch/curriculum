@@ -5,23 +5,25 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Selects del formulario "Añadir"
 const selectCategoria = document.getElementById("categoria");
 const selectTrabajo = document.getElementById("trabajo");
 
+// Selects de filtros en "Buscar"
 const filtroCategoria = document.getElementById("filtro-categoria");
 const filtroTrabajo = document.getElementById("filtro-trabajo");
 
-// 📌 Array local con tareas temporales
+// Array temporal para la tabla local
 let tareasLocales = [];
 
-// 🔹 Mostrar secciones
+/* ========== Navegación de secciones ========== */
 function mostrarSeccion(id) {
   document.querySelectorAll(".seccion").forEach(sec => (sec.style.display = "none"));
   if (id) document.getElementById(id).style.display = "block";
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// 🔹 Formularios de nueva categoría / trabajo
+/* ========== Formularios categoría/trabajo ========== */
 function mostrarFormCategoria() {
   document.getElementById("form-categoria").style.display = "block";
 }
@@ -32,42 +34,41 @@ function mostrarFormTrabajo() {
 }
 window.mostrarFormTrabajo = mostrarFormTrabajo;
 
-// 🔹 Guardar categoría
 async function guardarCategoria() {
   const nombre = document.getElementById("nueva-categoria").value.trim();
   if (!nombre) return alert("Introduce un nombre de categoría");
-
   const { error } = await supabase.from("categorias").insert([{ nombre }]);
   if (error) return alert("Error guardando categoría: " + error.message);
-
   document.getElementById("form-categoria").style.display = "none";
   document.getElementById("nueva-categoria").value = "";
   cargarCategorias();
 }
 window.guardarCategoria = guardarCategoria;
 
-// 🔹 Guardar trabajo
 async function guardarTrabajo() {
   const nombre = document.getElementById("nuevo-trabajo").value.trim();
   const categoriaId = selectCategoria.value;
   if (!nombre || !categoriaId) return alert("Selecciona una categoría y escribe un trabajo");
-
   const { error } = await supabase.from("trabajos").insert([{ nombre, categoria_id: categoriaId }]);
   if (error) return alert("Error guardando trabajo: " + error.message);
-
   document.getElementById("form-trabajo").style.display = "none";
   document.getElementById("nuevo-trabajo").value = "";
   cargarTrabajos(categoriaId);
 }
 window.guardarTrabajo = guardarTrabajo;
 
-// 🔹 Cargar categorías
+/* ========== Carga de datos para selects ========== */
 async function cargarCategorias() {
+  // Formulario "Añadir"
   selectCategoria.innerHTML = "<option value=''>-- Selecciona una categoría --</option>";
-  filtroCategoria.innerHTML = "<option value=''>-- Todas --</option>";
+  // Filtros "Buscar"
+  if (filtroCategoria) filtroCategoria.innerHTML = "<option value=''>-- Todas --</option>";
 
   const { data, error } = await supabase.from("categorias").select("*").order("nombre");
-  if (error) return console.error(error);
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   data.forEach(cat => {
     const opt1 = document.createElement("option");
@@ -75,39 +76,54 @@ async function cargarCategorias() {
     opt1.textContent = cat.nombre;
     selectCategoria.appendChild(opt1);
 
-    const opt2 = document.createElement("option");
-    opt2.value = cat.id;
-    opt2.textContent = cat.nombre;
-    filtroCategoria.appendChild(opt2);
+    if (filtroCategoria) {
+      const opt2 = document.createElement("option");
+      opt2.value = cat.id;
+      opt2.textContent = cat.nombre;
+      filtroCategoria.appendChild(opt2);
+    }
   });
 
-  selectCategoria.addEventListener("change", () => {
+  // Cuando cambie la categoría del formulario "Añadir"
+  selectCategoria.onchange = () => {
     const categoriaId = selectCategoria.value;
     if (categoriaId) {
       cargarTrabajos(categoriaId);
     } else {
       selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
     }
-  });
+  };
 
-  filtroCategoria.addEventListener("change", () => {
-    const categoriaId = filtroCategoria.value;
-    if (categoriaId) {
-      cargarTrabajos(categoriaId, true);
-    } else {
-      filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
-    }
-  });
+  // Cuando cambie la categoría del filtro "Buscar"
+  if (filtroCategoria) {
+    filtroCategoria.onchange = () => {
+      const categoriaId = filtroCategoria.value;
+      if (categoriaId) {
+        cargarTrabajos(categoriaId, true);
+      } else if (filtroTrabajo) {
+        filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
+      }
+    };
+  }
 }
 window.cargarCategorias = cargarCategorias;
 
-// 🔹 Cargar trabajos
 async function cargarTrabajos(categoriaId, isFilter = false) {
   const target = isFilter ? filtroTrabajo : selectTrabajo;
-  target.innerHTML = "<option value=''>-- Selecciona un trabajo --</option>";
+  if (!target) return;
+  target.innerHTML = isFilter
+    ? "<option value=''>-- Todos --</option>"
+    : "<option value=''>-- Selecciona un trabajo --</option>";
 
-  const { data, error } = await supabase.from("trabajos").select("*").eq("categoria_id", categoriaId);
-  if (error) return console.error(error);
+  const { data, error } = await supabase
+    .from("trabajos")
+    .select("*")
+    .eq("categoria_id", categoriaId);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   data.forEach(trabajo => {
     const opt = document.createElement("option");
@@ -118,7 +134,7 @@ async function cargarTrabajos(categoriaId, isFilter = false) {
 }
 window.cargarTrabajos = cargarTrabajos;
 
-// 🔹 Añadir tarea a tabla local
+/* ========== Flujo de AÑADIR (tabla local) ========== */
 function agregarTarea() {
   const fecha = document.getElementById("fecha").value;
   const categoriaId = selectCategoria.value;
@@ -126,16 +142,24 @@ function agregarTarea() {
   const categoriaNombre = selectCategoria.options[selectCategoria.selectedIndex]?.text;
   const trabajoNombre = selectTrabajo.options[selectTrabajo.selectedIndex]?.text;
 
-  if (!fecha || !categoriaId || !trabajoId) return alert("Completa todos los campos");
+  if (!fecha || !categoriaId || !TrabajoIdVálido(trabajoId)) {
+    alert("Completa todos los campos");
+    return;
+  }
 
   tareasLocales.push({ fecha, categoriaId, trabajoId, categoriaNombre, trabajoNombre });
   renderTareasLocales();
 }
 window.agregarTarea = agregarTarea;
 
-// 🔹 Renderizar tabla local
+function TrabajoIdVálido(id) {
+  // Evita añadir la opción vacía
+  return id !== null && id !== undefined && id !== "";
+}
+
 function renderTareasLocales() {
-  const tbody = document.getElementById("tabla-body");
+  const tbody = document.getElementById("tabla-body-local");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   tareasLocales.forEach((t, i) => {
@@ -150,16 +174,17 @@ function renderTareasLocales() {
   });
 }
 
-// 🔹 Eliminar tarea local
 function eliminarTareaLocal(i) {
   tareasLocales.splice(i, 1);
   renderTareasLocales();
 }
 window.eliminarTareaLocal = eliminarTareaLocal;
 
-// 🔹 Guardar todas las tareas locales en BD
 async function guardarTodo() {
-  if (tareasLocales.length === 0) return alert("No hay tareas para guardar");
+  if (tareasLocales.length === 0) {
+    alert("No hay tareas para guardar");
+    return;
+  }
 
   const insertData = tareasLocales.map(t => ({
     fecha: t.fecha,
@@ -168,7 +193,10 @@ async function guardarTodo() {
   }));
 
   const { error } = await supabase.from("tareas").insert(insertData);
-  if (error) return alert("Error guardando en BD: " + error.message);
+  if (error) {
+    alert("Error guardando en BD: " + error.message);
+    return;
+  }
 
   alert("Tareas guardadas correctamente ✅");
   tareasLocales = [];
@@ -176,11 +204,12 @@ async function guardarTodo() {
 }
 window.guardarTodo = guardarTodo;
 
-// 🔹 Buscar tareas (para la pestaña Buscar)
+/* ========== Pestaña BUSCAR (desde BD) ========== */
 async function buscarTareas() {
-  const fecha = document.getElementById("filtro-fecha")?.value;
-  const categoriaId = filtroCategoria.value;
-  const trabajoId = filtroTrabajo.value;
+  const fechaInput = document.getElementById("filtro-fecha");
+  const fecha = fechaInput ? fechaInput.value : "";
+  const categoriaId = filtroCategoria ? filtroCategoria.value : "";
+  const trabajoId = filtroTrabajo ? filtroTrabajo.value : "";
 
   let query = supabase.from("tareas").select(`
     id, fecha,
@@ -193,37 +222,41 @@ async function buscarTareas() {
   if (trabajoId) query = query.eq("trabajo_id", trabajoId);
 
   const { data, error } = await query;
-  if (error) return console.error(error);
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   renderTareasBD(data);
 }
 window.buscarTareas = buscarTareas;
 
-// 🔹 Reset filtros
 function resetFiltros() {
-  document.getElementById("filtro-fecha").value = "";
-  filtroCategoria.value = "";
-  filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
+  const fechaInput = document.getElementById("filtro-fecha");
+  if (fechaInput) fechaInput.value = "";
+  if (filtroCategoria) filtroCategoria.value = "";
+  if (filtroTrabajo) filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
   mostrarTareas();
 }
 window.resetFiltros = resetFiltros;
 
-// 🔹 Mostrar todas las tareas de BD
 async function mostrarTareas() {
   const { data, error } = await supabase.from("tareas").select(`
     id, fecha,
     categoria:categorias(nombre),
     trabajo:trabajos(nombre)
   `);
-  if (error) return console.error(error);
-
+  if (error) {
+    console.error(error);
+    return;
+  }
   renderTareasBD(data);
 }
 window.mostrarTareas = mostrarTareas;
 
-// 🔹 Renderizar tabla de BD (pestaña Buscar)
 function renderTareasBD(data) {
-  const tbody = document.getElementById("tabla-body");
+  const tbody = document.getElementById("tabla-body-bd");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   data.forEach(tarea => {
@@ -238,15 +271,17 @@ function renderTareasBD(data) {
   });
 }
 
-// 🔹 Eliminar tarea de BD
 async function eliminarTarea(id) {
   const { error } = await supabase.from("tareas").delete().eq("id", id);
-  if (error) return alert("Error eliminando tarea: " + error.message);
-  buscarTareas();
+  if (error) {
+    alert("Error eliminando tarea: " + error.message);
+    return;
+  }
+  buscarTareas(); // refresca con filtros activos
 }
 window.eliminarTarea = eliminarTarea;
 
-// Inicialización
+/* ========== Inicialización ========== */
 cargarCategorias();
 mostrarTareas();
-mostrarSeccion("");
+mostrarSeccion("add"); // abre en la pestaña Añadir por defecto
