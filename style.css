@@ -18,12 +18,12 @@ h1, h2 {
 
 #menu button {
   margin: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 24px;
+  font-size: 18px;
   border: none;
   background: #4CAF50;
   color: white;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -34,25 +34,26 @@ h1, h2 {
 label {
   display: block;
   margin: 10px 0 5px;
+  font-size: 16px;
 }
 
 select, input[type="date"], input[type="text"] {
   width: 100%;
-  max-width: 400px;
-  padding: 8px;
+  max-width: 500px;
+  padding: 10px;
   font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 button {
-  padding: 8px 16px;
-  font-size: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
   background: #2196F3;
   color: white;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -70,8 +71,9 @@ table {
 
 table th, table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   text-align: center;
+  font-size: 15px;
 }
 
 table th {
@@ -79,20 +81,25 @@ table th {
   font-weight: bold;
 }
 
-/* Responsive para móvil */
-@media screen and (max-width: 600px) {
+/* 📱 Ajustes responsive para móviles */
+@media screen and (max-width: 768px) {
   body {
     margin: 10px;
+    font-size: 18px; /* texto general más grande */
   }
 
   #menu button {
     width: 100%;
-    margin: 5px 0;
+    margin: 8px 0;
+    padding: 14px;
+    font-size: 20px; /* botones más grandes */
   }
 
   select, input, button {
     width: 100%;
     max-width: none;
+    font-size: 18px;
+    padding: 12px;
   }
 
   table, thead, tbody, th, td, tr {
@@ -109,6 +116,7 @@ table th {
     text-align: right;
     padding-left: 50%;
     position: relative;
+    font-size: 18px; /* celdas más grandes */
   }
 
   table td::before {
@@ -116,8 +124,8 @@ table th {
     position: absolute;
     left: 10px;
     width: 45%;
-    padding-right: 10px;
     text-align: left;
     font-weight: bold;
+    font-size: 18px;
   }
 }

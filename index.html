@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Administrador de Tareas</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Carga de la lógica -->
   <script type="module" src="script.js" defer></script>
 </head>
 <body>
@@ -17,17 +16,19 @@
     <button onclick="window.print()">Imprimir</button>
   </div>
 
-
-  
   <!-- ========================= -->
   <!-- Sección Añadir Tarea -->
   <!-- ========================= -->
   <div id="add" class="seccion" style="display:none;">
     <h2>Añadir Tarea</h2>
 
-    <label>Fecha: 
+    <label>Fecha:
       <input type="date" id="fecha">
     </label>
+    <br><br>
+
+    <!-- Botón de buscar tareas -->
+    <button onclick="buscarTareas()">🔎 Buscar tareas</button>
     <br><br>
 
     <label>Categoría:
@@ -44,13 +45,13 @@
 
     <button onclick="agregarTarea()">Guardar tarea</button>
 
-    <!-- Formulario oculto para nueva categoría -->
+    <!-- Formulario nueva categoría -->
     <div id="form-categoria" style="display:none; margin-top:10px;">
       <input type="text" id="nueva-categoria" placeholder="Nombre categoría">
       <button onclick="guardarCategoria()">Guardar categoría</button>
     </div>
 
-    <!-- Formulario oculto para nuevo trabajo -->
+    <!-- Formulario nuevo trabajo -->
     <div id="form-trabajo" style="display:none; margin-top:10px;">
       <input type="text" id="nuevo-trabajo" placeholder="Nombre trabajo">
       <button onclick="guardarTrabajo()">Guardar trabajo</button>
@@ -78,7 +79,7 @@
   <!-- ========================= -->
   <div id="search" class="seccion" style="display:none;">
     <h2>Buscar tareas</h2>
-    <p>(Aquí pondremos filtros de búsqueda más adelante)</p>
+    <p>(Aquí pondremos filtros más adelante)</p>
   </div>
 </body>
 </html>
