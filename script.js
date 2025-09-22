@@ -69,8 +69,11 @@ async function guardarTrabajo() {
 window.guardarTrabajo = guardarTrabajo;
 
 // 🔹 Cargar categorías
+// 🔹 Cargar categorías
 async function cargarCategorias() {
-  selectCategoria.innerHTML = "";
+  selectCategoria.innerHTML = "<option value=''>-- Selecciona una categoría --</option>";
+  selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
+
   const { data, error } = await supabase.from("categorias").select("*").order("nombre");
   if (error) {
     console.error(error);
@@ -82,8 +85,8 @@ async function cargarCategorias() {
     option.textContent = cat.nombre;
     selectCategoria.appendChild(option);
   });
-  if (data.length > 0) cargarTrabajos(data[0].id);
 }
+
 window.cargarCategorias = cargarCategorias;
 
 // 🔹 Cargar trabajos de una categoría
