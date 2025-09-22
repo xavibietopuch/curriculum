@@ -83,6 +83,70 @@ table th {
 }
 
 /* 📱 Ajustes responsive para móviles (vertical) */
+/* 📱 Ajustes responsive para móviles (vertical, todo MUY grande) */
+@media screen and (max-width: 600px) {
+  body {
+    margin: 40px;
+    font-size: 60px; /* texto base enorme */
+  }
+
+  h1 {
+    font-size: 100px;
+  }
+
+  h2 {
+    font-size: 80px;
+  }
+
+  #menu button {
+    width: 100%;
+    margin: 30px 0;
+    padding: 60px;
+    font-size: 80px; /* texto botones enorme */
+  }
+
+  label {
+    font-size: 70px;
+  }
+
+  select, input, button {
+    width: 100%;
+    max-width: none;
+    font-size: 70px;
+    padding: 50px;
+  }
+
+  /* Tablas como tarjetas grandes */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  table tr {
+    margin-bottom: 50px;
+    border: 6px solid #ccc;
+    border-radius: 20px;
+    padding: 40px;
+    background: #fff;
+  }
+
+  table td {
+    text-align: right;
+    padding-left: 55%;
+    position: relative;
+    font-size: 65px;
+    padding: 35px;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 25px;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+    font-size: 65px;
+  }
+}
 @media screen and (max-width: 600px) {
   body {
     margin: 20px;
