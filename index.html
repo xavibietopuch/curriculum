@@ -27,9 +27,6 @@
     </label>
     <br><br>
 
-    <!-- Botón de buscar tareas -->
-
-
     <label>Categoría:
       <select id="categoria"></select>
     </label>
@@ -55,22 +52,6 @@
       <input type="text" id="nuevo-trabajo" placeholder="Nombre trabajo">
       <button onclick="guardarTrabajo()">Guardar trabajo</button>
     </div>
-
-    <!-- Tabla de tareas -->
-    <div style="margin-top:20px;">
-      <h2>Tareas añadidas</h2>
-      <table border="1" id="tabla">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Categoría</th>
-            <th>Trabajo</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-body"></tbody>
-      </table>
-    </div>
   </div>
 
   <!-- ========================= -->
@@ -78,7 +59,39 @@
   <!-- ========================= -->
   <div id="search" class="seccion" style="display:none;">
     <h2>Buscar tareas</h2>
-    <p>(Aquí pondremos filtros más adelante)</p>
+
+    <!-- Filtros -->
+    <div id="filtros" style="margin-bottom:15px;">
+      <label>
+        Fecha:
+        <input type="date" id="filtro-fecha">
+      </label>
+      <label>
+        Categoría:
+      <label>
+        Categoría:
+        <select id="filtro-categoria"></select>
+      </label>
+      <label>
+        Trabajo:
+        <select id="filtro-trabajo"></select>
+      </label>
+      <button onclick="buscarTareas()">Buscar</button>
+      <button onclick="resetFiltros()">Reset</button>
+    </div>
+
+    <!-- Tabla de resultados -->
+    <table border="1" id="tabla">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Categoría</th>
+          <th>Trabajo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body"></tbody>
+    </table>
   </div>
 </body>
 </html>
