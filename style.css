@@ -9,6 +9,7 @@ body {
 h1, h2 {
   text-align: center;
   color: #222;
+  margin-bottom: 20px;
 }
 
 #menu {
@@ -33,7 +34,7 @@ h1, h2 {
 
 label {
   display: block;
-  margin: 10px 0 5px;
+  margin: 12px 0 6px;
   font-size: 16px;
 }
 
@@ -81,51 +82,67 @@ table th {
   font-weight: bold;
 }
 
-/* 📱 Ajustes responsive para móviles */
-@media screen and (max-width: 768px) {
+/* 📱 Ajustes responsive para móviles (vertical) */
+@media screen and (max-width: 600px) {
   body {
     margin: 10px;
-    font-size: 18px; /* texto general más grande */
+    font-size: 22px; /* texto general mucho más grande */
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
   }
 
   #menu button {
     width: 100%;
-    margin: 8px 0;
-    padding: 14px;
-    font-size: 20px; /* botones más grandes */
+    margin: 10px 0;
+    padding: 18px;
+    font-size: 22px; /* botones mucho más grandes */
+  }
+
+  label {
+    font-size: 20px;
   }
 
   select, input, button {
     width: 100%;
     max-width: none;
-    font-size: 18px;
-    padding: 12px;
+    font-size: 20px;
+    padding: 16px;
   }
 
+  /* La tabla se convierte en tarjetas */
   table, thead, tbody, th, td, tr {
     display: block;
   }
 
   table tr {
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    padding: 8px;
+    margin-bottom: 18px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
   }
 
   table td {
     text-align: right;
     padding-left: 50%;
     position: relative;
-    font-size: 18px; /* celdas más grandes */
+    font-size: 20px;
+    padding: 14px;
   }
 
   table td::before {
     content: attr(data-label);
     position: absolute;
-    left: 10px;
+    left: 12px;
     width: 45%;
     text-align: left;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
   }
 }
