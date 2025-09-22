@@ -1,9 +1,11 @@
+// Configuración Supabase
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabaseUrl = "https://ltlbdhwsihmsnjjjwxmi.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0bGJkaHdzaWhtc25qamp3eG1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1MjYzNjksImV4cCI6MjA3NDEwMjM2OX0.w9-ogm-lElU_Z62eURWzg61rzBPCDT0JEcLdgG6n0Vo";
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
 
 const selectCategoria = document.getElementById("categoria");
 const selectTrabajo = document.getElementById("trabajo");
@@ -15,13 +17,13 @@ function mostrarSeccion(id) {
 }
 window.mostrarSeccion = mostrarSeccion;
 
-// 🔹 Mostrar formulario nueva categoría
+// 🔹 Mostrar formulario de nueva categoría
 function mostrarFormCategoria() {
   document.getElementById("form-categoria").style.display = "block";
 }
 window.mostrarFormCategoria = mostrarFormCategoria;
 
-// 🔹 Guardar categoría
+// 🔹 Guardar nueva categoría
 async function guardarCategoria() {
   const nombre = document.getElementById("nueva-categoria").value.trim();
   if (!nombre) {
@@ -39,13 +41,13 @@ async function guardarCategoria() {
 }
 window.guardarCategoria = guardarCategoria;
 
-// 🔹 Mostrar formulario nuevo trabajo
+// 🔹 Mostrar formulario de nuevo trabajo
 function mostrarFormTrabajo() {
   document.getElementById("form-trabajo").style.display = "block";
 }
 window.mostrarFormTrabajo = mostrarFormTrabajo;
 
-// 🔹 Guardar trabajo
+// 🔹 Guardar nuevo trabajo
 async function guardarTrabajo() {
   const nombre = document.getElementById("nuevo-trabajo").value.trim();
   const categoriaId = selectCategoria.value;
@@ -67,6 +69,7 @@ async function guardarTrabajo() {
 window.guardarTrabajo = guardarTrabajo;
 
 // 🔹 Cargar categorías
+// 🔹 Cargar categorías
 async function cargarCategorias() {
   selectCategoria.innerHTML = "<option value=''>-- Selecciona una categoría --</option>";
   selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
@@ -76,40 +79,27 @@ async function cargarCategorias() {
     console.error(error);
     return;
   }
-
   data.forEach(cat => {
     const option = document.createElement("option");
-    option.value = cat.id;
+    option.value = cat.id; // usamos el ID UUID
     option.textContent = cat.nombre;
     selectCategoria.appendChild(option);
   });
-
-  // Cuando cambie la categoría, refrescar trabajos
-  selectCategoria.addEventListener("change", () => {
-    const categoriaId = selectCategoria.value;
-    if (categoriaId) {
-      cargarTrabajos(categoriaId);
-    } else {
-      selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
-    }
-  });
 }
+
 window.cargarCategorias = cargarCategorias;
 
 // 🔹 Cargar trabajos de una categoría
 async function cargarTrabajos(categoriaId) {
-  selectTrabajo.innerHTML = "<option value=''>-- Selecciona un trabajo --</option>";
-
+  selectTrabajo.innerHTML = "";
   const { data, error } = await supabase
     .from("trabajos")
     .select("*")
     .eq("categoria_id", categoriaId);
-
   if (error) {
     console.error(error);
     return;
   }
-
   data.forEach(trabajo => {
     const opt = document.createElement("option");
     opt.value = trabajo.id;
@@ -137,27 +127,15 @@ async function agregarTarea() {
     alert("Error guardando tarea: " + error.message);
     return;
   }
-  mostrarTareas(categoriaId); // refrescamos filtrado
+  mostrarTareas();
 }
 window.agregarTarea = agregarTarea;
 
-// 🔹 Buscar tareas (al pulsar botón)
-function buscarTareas() {
-  const categoriaId = selectCategoria.value;
-  if (categoriaId) {
-    mostrarTareas(categoriaId);
-  } else {
-    mostrarTareas(); // todas
-  }
-}
-window.buscarTareas = buscarTareas;
-
 // 🔹 Mostrar tareas
-async function mostrarTareas(categoriaId = null) {
+async function mostrarTareas() {
   const tbody = document.getElementById("tabla-body");
   tbody.innerHTML = "";
-
-  let query = supabase
+  const { data, error } = await supabase
     .from("tareas")
     .select(`
       id,
@@ -165,17 +143,10 @@ async function mostrarTareas(categoriaId = null) {
       categoria:categorias(nombre),
       trabajo:trabajos(nombre)
     `);
-
-  if (categoriaId) {
-    query = query.eq("categoria_id", categoriaId);
-  }
-
-  const { data, error } = await query;
   if (error) {
     console.error(error);
     return;
   }
-
   data.forEach(tarea => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -196,12 +167,11 @@ async function eliminarTarea(id) {
     alert("Error eliminando tarea: " + error.message);
     return;
   }
-  const categoriaId = selectCategoria.value;
-  mostrarTareas(categoriaId || null);
+  mostrarTareas();
 }
 window.eliminarTarea = eliminarTarea;
 
 // Inicialización
 cargarCategorias();
-mostrarTareas(); // todas al inicio
+mostrarTareas();
 mostrarSeccion("");
