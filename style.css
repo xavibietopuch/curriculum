@@ -84,133 +84,78 @@ table th {
 
 /* 📱 Ajustes responsive para móviles (vertical) */
 /* 📱 Ajustes responsive para móviles (vertical, todo MUY grande) */
-@media screen and (max-width: 600px) {
-  body {
-    margin: 40px;
-    font-size: 60px; /* texto base enorme */
-  }
-
-  h1 {
-    font-size: 100px;
-  }
-
-  h2 {
-    font-size: 80px;
-  }
-
-  #menu button {
-    width: 100%;
-    margin: 30px 0;
-    padding: 60px;
-    font-size: 80px; /* texto botones enorme */
-  }
-
-  label {
-    font-size: 70px;
-  }
-
-  select, input, button {
-    width: 100%;
-    max-width: none;
-    font-size: 70px;
-    padding: 50px;
-  }
-
-  /* Tablas como tarjetas grandes */
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-
-  table tr {
-    margin-bottom: 50px;
-    border: 6px solid #ccc;
-    border-radius: 20px;
-    padding: 40px;
-    background: #fff;
-  }
-
-  table td {
-    text-align: right;
-    padding-left: 55%;
-    position: relative;
-    font-size: 65px;
-    padding: 35px;
-  }
-
-  table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 25px;
-    width: 45%;
-    text-align: left;
-    font-weight: bold;
-    font-size: 65px;
-  }
-}
-/* 📱 Ajustes responsive para móviles (vertical, todo MUY grande) */
 /* 📱 Ajustes responsive para móviles */
 @media screen and (max-width: 600px) {
   body {
-    margin: 40px;
-    font-size: 80px; /* texto base enorme */
+    margin: 20px;
+    font-size: 40px;
   }
 
   h1 {
-    font-size: 120px;
+    font-size: 70px;
   }
 
   h2 {
-    font-size: 100px;
+    font-size: 60px;
   }
 
   #menu button {
     width: 100%;
-    margin: 40px 0;
-    padding: 80px;
-    font-size: 100px; /* texto de los botones */
+    margin: 20px 0;
+    padding: 40px;
+    font-size: 60px;
   }
 
   label {
-    font-size: 90px;
+    font-size: 55px;
   }
 
   select, input, button {
     width: 100%;
     max-width: none;
-    font-size: 90px;
-    padding: 60px;
+    font-size: 55px;
+    padding: 30px;
   }
 
-  /* Tablas como tarjetas grandes */
-  table, thead, tbody, th, td, tr {
-    display: block;
+  /* ✅ Tablas en grid de 2 columnas */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* dos columnas iguales */
+    gap: 15px;
   }
 
-  table tr {
-    margin-bottom: 60px;
-    border: 8px solid #ccc;
-    border-radius: 25px;
-    padding: 50px;
+  thead {
+    display: none; /* ocultamos cabecera en móvil */
+  }
+
+  tbody {
+    display: contents; /* los <tr> se convierten en celdas del grid */
+  }
+
+  tr {
+    display: contents;
+  }
+
+  td {
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 55px;
     background: #fff;
+    text-align: center;
   }
 
-  table td {
-    text-align: right;
-    padding-left: 55%;
-    position: relative;
-    font-size: 90px;
-    padding: 40px;
-  }
-
-  table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 30px;
-    width: 45%;
-    text-align: left;
+  td[data-label]::before {
+    display: block;
     font-weight: bold;
-    font-size: 90px;
+    margin-bottom: 8px;
+    font-size: 55px;
+    content: attr(data-label);
+    text-align: center;
   }
 }
+
 
 
