@@ -39,6 +39,12 @@
     <button onclick="mostrarFormTrabajo()">+ Añadir trabajo</button>
     <br><br>
 
+    <label>Cliente:
+      <select id="cliente"></select>
+    </label>
+    <button onclick="mostrarFormCliente()">+ Añadir cliente</button>
+    <br><br>
+
     <!-- Botón para añadir a la tabla local -->
     <button onclick="agregarTarea()">Añadir a la lista</button>
 
@@ -54,6 +60,12 @@
       <button onclick="guardarTrabajo()">Guardar trabajo</button>
     </div>
 
+    <!-- Formulario nuevo cliente -->
+    <div id="form-cliente" style="display:none; margin-top:10px;">
+      <input type="text" id="nuevo-cliente" placeholder="Nombre cliente">
+      <button onclick="guardarCliente()">Guardar cliente</button>
+    </div>
+
     <!-- Tabla de tareas locales -->
     <div style="margin-top:20px;">
       <h2>Tareas pendientes (local)</h2>
@@ -63,6 +75,7 @@
             <th>Fecha</th>
             <th>Categoría</th>
             <th>Trabajo</th>
+            <th>Cliente</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -92,6 +105,10 @@
         Trabajo:
         <select id="filtro-trabajo"></select>
       </label>
+      <label>
+        Cliente:
+        <select id="filtro-cliente"></select>
+      </label>
       <button onclick="buscarTareas()">Buscar</button>
       <button onclick="resetFiltros()">Reset</button>
     </div>
@@ -103,6 +120,7 @@
           <th>Fecha</th>
           <th>Categoría</th>
           <th>Trabajo</th>
+          <th>Cliente</th>
           <th>Acción</th>
         </tr>
       </thead>

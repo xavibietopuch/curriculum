@@ -8,10 +8,12 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Selects del formulario "Añadir"
 const selectCategoria = document.getElementById("categoria");
 const selectTrabajo = document.getElementById("trabajo");
+const selectCliente = document.getElementById("cliente");
 
 // Selects de filtros en "Buscar"
 const filtroCategoria = document.getElementById("filtro-categoria");
 const filtroTrabajo = document.getElementById("filtro-trabajo");
+const filtroCliente = document.getElementById("filtro-cliente");
 
 // Array temporal para la tabla local
 let tareasLocales = [];
@@ -23,7 +25,7 @@ function mostrarSeccion(id) {
 }
 window.mostrarSeccion = mostrarSeccion;
 
-/* ========== Formularios categoría/trabajo ========== */
+/* ========== Formularios de entidad ========== */
 function mostrarFormCategoria() {
   document.getElementById("form-categoria").style.display = "block";
 }
@@ -34,6 +36,12 @@ function mostrarFormTrabajo() {
 }
 window.mostrarFormTrabajo = mostrarFormTrabajo;
 
+function mostrarFormCliente() {
+  document.getElementById("form-cliente").style.display = "block";
+}
+window.mostrarFormCliente = mostrarFormCliente;
+
+/* ========== Guardar entidades ========== */
 async function guardarCategoria() {
   const nombre = document.getElementById("nueva-categoria").value.trim();
   if (!nombre) return alert("Introduce un nombre de categoría");
@@ -57,120 +65,98 @@ async function guardarTrabajo() {
 }
 window.guardarTrabajo = guardarTrabajo;
 
-/* ========== Carga de datos para selects ========== */
+async function guardarCliente() {
+  const nombre = document.getElementById("nuevo-cliente").value.trim();
+  if (!nombre) return alert("Introduce un nombre de cliente");
+  const { error } = await supabase.from("clientes").insert([{ nombre }]);
+  if (error) return alert("Error guardando cliente: " + error.message);
+  document.getElementById("form-cliente").style.display = "none";
+  document.getElementById("nuevo-cliente").value = "";
+  cargarClientes();
+}
+window.guardarCliente = guardarCliente;
+
+/* ========== Carga de selects ========== */
 async function cargarCategorias() {
-  // Formulario "Añadir"
   selectCategoria.innerHTML = "<option value=''>-- Selecciona una categoría --</option>";
-  // Filtros "Buscar"
   if (filtroCategoria) filtroCategoria.innerHTML = "<option value=''>-- Todas --</option>";
 
   const { data, error } = await supabase.from("categorias").select("*").order("nombre");
-  if (error) {
-    console.error(error);
-    return;
-  }
+  if (error) return console.error(error);
 
   data.forEach(cat => {
-    const opt1 = document.createElement("option");
-    opt1.value = cat.id;
-    opt1.textContent = cat.nombre;
-    selectCategoria.appendChild(opt1);
-
-    if (filtroCategoria) {
-      const opt2 = document.createElement("option");
-      opt2.value = cat.id;
-      opt2.textContent = cat.nombre;
-      filtroCategoria.appendChild(opt2);
-    }
+    selectCategoria.append(new Option(cat.nombre, cat.id));
+    if (filtroCategoria) filtroCategoria.append(new Option(cat.nombre, cat.id));
   });
 
-  // Cuando cambie la categoría del formulario "Añadir"
   selectCategoria.onchange = () => {
-    const categoriaId = selectCategoria.value;
-    if (categoriaId) {
-      cargarTrabajos(categoriaId);
-    } else {
-      selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
-    }
+    if (selectCategoria.value) cargarTrabajos(selectCategoria.value);
+    else selectTrabajo.innerHTML = "<option value=''>-- Selecciona primero una categoría --</option>";
   };
-
-  // Cuando cambie la categoría del filtro "Buscar"
-  if (filtroCategoria) {
-    filtroCategoria.onchange = () => {
-      const categoriaId = filtroCategoria.value;
-      if (categoriaId) {
-        cargarTrabajos(categoriaId, true);
-      } else if (filtroTrabajo) {
-        filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
-      }
-    };
-  }
 }
 window.cargarCategorias = cargarCategorias;
 
 async function cargarTrabajos(categoriaId, isFilter = false) {
   const target = isFilter ? filtroTrabajo : selectTrabajo;
-  if (!target) return;
   target.innerHTML = isFilter
     ? "<option value=''>-- Todos --</option>"
     : "<option value=''>-- Selecciona un trabajo --</option>";
 
-  const { data, error } = await supabase
-    .from("trabajos")
-    .select("*")
-    .eq("categoria_id", categoriaId);
-
-  if (error) {
-    console.error(error);
-    return;
-  }
+  const { data, error } = await supabase.from("trabajos").select("*").eq("categoria_id", categoriaId);
+  if (error) return console.error(error);
 
   data.forEach(trabajo => {
-    const opt = document.createElement("option");
-    opt.value = trabajo.id;
-    opt.textContent = trabajo.nombre;
-    target.appendChild(opt);
+    target.append(new Option(trabajo.nombre, trabajo.id));
   });
 }
 window.cargarTrabajos = cargarTrabajos;
 
-/* ========== Flujo de AÑADIR (tabla local) ========== */
+async function cargarClientes() {
+  selectCliente.innerHTML = "<option value=''>-- Selecciona un cliente --</option>";
+  if (filtroCliente) filtroCliente.innerHTML = "<option value=''>-- Todos --</option>";
+
+  const { data, error } = await supabase.from("clientes").select("*").order("nombre");
+  if (error) return console.error(error);
+
+  data.forEach(cli => {
+    selectCliente.append(new Option(cli.nombre, cli.id));
+    if (filtroCliente) filtroCliente.append(new Option(cli.nombre, cli.id));
+  });
+}
+window.cargarClientes = cargarClientes;
+
+/* ========== Flujo Añadir (local) ========== */
 function agregarTarea() {
   const fecha = document.getElementById("fecha").value;
   const categoriaId = selectCategoria.value;
   const trabajoId = selectTrabajo.value;
+  const clienteId = selectCliente.value;
+
   const categoriaNombre = selectCategoria.options[selectCategoria.selectedIndex]?.text;
   const trabajoNombre = selectTrabajo.options[selectTrabajo.selectedIndex]?.text;
+  const clienteNombre = selectCliente.options[selectCliente.selectedIndex]?.text;
 
-  if (!fecha || !categoriaId || !TrabajoIdVálido(trabajoId)) {
-    alert("Completa todos los campos");
-    return;
+  if (!fecha || !categoriaId || !trabajoId || !clienteId) {
+    return alert("Completa todos los campos");
   }
 
-  tareasLocales.push({ fecha, categoriaId, trabajoId, categoriaNombre, trabajoNombre });
+  tareasLocales.push({ fecha, categoriaId, trabajoId, clienteId, categoriaNombre, trabajoNombre, clienteNombre });
   renderTareasLocales();
 }
 window.agregarTarea = agregarTarea;
 
-function TrabajoIdVálido(id) {
-  // Evita añadir la opción vacía
-  return id !== null && id !== undefined && id !== "";
-}
-
 function renderTareasLocales() {
   const tbody = document.getElementById("tabla-body-local");
-  if (!tbody) return;
   tbody.innerHTML = "";
-
   tareasLocales.forEach((t, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td data-label="Fecha">${t.fecha}</td>
-      <td data-label="Categoría">${t.categoriaNombre}</td>
-      <td data-label="Trabajo">${t.trabajoNombre}</td>
-      <td data-label="Acción"><button onclick="eliminarTareaLocal(${i})">Eliminar</button></td>
-    `;
-    tbody.appendChild(row);
+    tbody.innerHTML += `
+      <tr>
+        <td>${t.fecha}</td>
+        <td>${t.categoriaNombre}</td>
+        <td>${t.trabajoNombre}</td>
+        <td>${t.clienteNombre}</td>
+        <td><button onclick="eliminarTareaLocal(${i})">Eliminar</button></td>
+      </tr>`;
   });
 }
 
@@ -181,22 +167,17 @@ function eliminarTareaLocal(i) {
 window.eliminarTareaLocal = eliminarTareaLocal;
 
 async function guardarTodo() {
-  if (tareasLocales.length === 0) {
-    alert("No hay tareas para guardar");
-    return;
-  }
+  if (tareasLocales.length === 0) return alert("No hay tareas para guardar");
 
   const insertData = tareasLocales.map(t => ({
     fecha: t.fecha,
     categoria_id: t.categoriaId,
-    trabajo_id: t.trabajoId
+    trabajo_id: t.trabajoId,
+    cliente_id: t.clienteId
   }));
 
   const { error } = await supabase.from("tareas").insert(insertData);
-  if (error) {
-    alert("Error guardando en BD: " + error.message);
-    return;
-  }
+  if (error) return alert("Error guardando en BD: " + error.message);
 
   alert("Tareas guardadas correctamente ✅");
   tareasLocales = [];
@@ -204,84 +185,55 @@ async function guardarTodo() {
 }
 window.guardarTodo = guardarTodo;
 
-/* ========== Pestaña BUSCAR (desde BD) ========== */
+/* ========== Buscar/Mostrar desde BD ========== */
 async function buscarTareas() {
-  const fechaInput = document.getElementById("filtro-fecha");
-  const fecha = fechaInput ? fechaInput.value : "";
-  const categoriaId = filtroCategoria ? filtroCategoria.value : "";
-  const trabajoId = filtroTrabajo ? filtroTrabajo.value : "";
+  const fecha = document.getElementById("filtro-fecha")?.value;
+  const categoriaId = filtroCategoria?.value;
+  const trabajoId = filtroTrabajo?.value;
+  const clienteId = filtroCliente?.value;
 
   let query = supabase.from("tareas").select(`
     id, fecha,
     categoria:categorias(nombre),
-    trabajo:trabajos(nombre)
+    trabajo:trabajos(nombre),
+    cliente:clientes(nombre)
   `);
 
   if (fecha) query = query.eq("fecha", fecha);
   if (categoriaId) query = query.eq("categoria_id", categoriaId);
   if (trabajoId) query = query.eq("trabajo_id", trabajoId);
+  if (clienteId) query = query.eq("cliente_id", clienteId);
 
   const { data, error } = await query;
-  if (error) {
-    console.error(error);
-    return;
-  }
+  if (error) return console.error(error);
 
   renderTareasBD(data);
 }
 window.buscarTareas = buscarTareas;
 
-function resetFiltros() {
-  const fechaInput = document.getElementById("filtro-fecha");
-  if (fechaInput) fechaInput.value = "";
-  if (filtroCategoria) filtroCategoria.value = "";
-  if (filtroTrabajo) filtroTrabajo.innerHTML = "<option value=''>-- Todos --</option>";
-  mostrarTareas();
-}
-window.resetFiltros = resetFiltros;
-
-async function mostrarTareas() {
-  const { data, error } = await supabase.from("tareas").select(`
-    id, fecha,
-    categoria:categorias(nombre),
-    trabajo:trabajos(nombre)
-  `);
-  if (error) {
-    console.error(error);
-    return;
-  }
-  renderTareasBD(data);
-}
-window.mostrarTareas = mostrarTareas;
-
 function renderTareasBD(data) {
   const tbody = document.getElementById("tabla-body-bd");
-  if (!tbody) return;
   tbody.innerHTML = "";
-
-  data.forEach(tarea => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td data-label="Fecha">${tarea.fecha}</td>
-      <td data-label="Categoría">${tarea.categoria?.nombre || "-"}</td>
-      <td data-label="Trabajo">${tarea.trabajo?.nombre || "-"}</td>
-      <td data-label="Acción"><button onclick="eliminarTarea('${tarea.id}')">Eliminar</button></td>
-    `;
-    tbody.appendChild(row);
+  data.forEach(t => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${t.fecha}</td>
+        <td>${t.categoria?.nombre || "-"}</td>
+        <td>${t.trabajo?.nombre || "-"}</td>
+        <td>${t.cliente?.nombre || "-"}</td>
+        <td><button onclick="eliminarTarea('${t.id}')">Eliminar</button></td>
+      </tr>`;
   });
 }
 
 async function eliminarTarea(id) {
-  const { error } = await supabase.from("tareas").delete().eq("id", id);
-  if (error) {
-    alert("Error eliminando tarea: " + error.message);
-    return;
-  }
-  buscarTareas(); // refresca con filtros activos
+  await supabase.from("tareas").delete().eq("id", id);
+  buscarTareas();
 }
 window.eliminarTarea = eliminarTarea;
 
 /* ========== Inicialización ========== */
 cargarCategorias();
+cargarClientes();
 mostrarTareas();
-mostrarSeccion("add"); // abre en la pestaña Añadir por defecto
+mostrarSeccion("add");
